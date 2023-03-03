@@ -1,0 +1,26 @@
+.cards {
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.card {
+    background-color: rgb(132, 253, 253);
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.card img {
+    margin: 0;
+    padding: 0;
+}
+
+.card p {
+    margin: 0;
+}
+
+.temp_text {
+    font-weight: bold;
+    font-size: 1.1rem;
+}

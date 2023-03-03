@@ -9,6 +9,8 @@ const CurrentWeatherComponent = ({ lat, lon }) => {
     const [loading, setLoading] = useState(true)
     const now = new Date()
 
+    console.log("Current is running....")
+
 
     const seach = async (params) => {
         try {
@@ -25,12 +27,9 @@ const CurrentWeatherComponent = ({ lat, lon }) => {
 
     }
 
-
     useEffect(() => {
         seach({ lat, lon })
     }, [])
-    console.log(now)
-
 
     return (
         <div className={style.body}>
@@ -48,8 +47,10 @@ const CurrentWeatherComponent = ({ lat, lon }) => {
                     <div className={style.main}>
                         <p className={style.fade_color}>{`${now.toDateString()}`}</p>
                         <div className={style.main_temp}>
-                            <img src='https://openweathermap.org/img/wn/50d@2x.png' />
-                            <p>{data.main.temp}</p>
+                            <img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} />
+                            <p>{data.main.temp}
+                                <span className={style.unit}>&deg;C</span>
+                            </p>
                         </div>
 
                         <div className={style.description}>

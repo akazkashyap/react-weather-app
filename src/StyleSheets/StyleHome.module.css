@@ -1,12 +1,17 @@
-.body {}
+.body {
+    padding: 10px;
+}
 
 .main {
     display: flex;
-    margin: 50px;
 }
 
 .current_weather {}
 
 .graph {
-    margin-top: 50px;
+    margin: 20px;
+}
+
+.cards {
+    margin: 20px;
 }

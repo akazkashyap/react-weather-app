@@ -4,13 +4,11 @@ import { Line } from "react-chartjs-2"
 
 
 const GraphComponent = ({ rawData }) => {
+    console.log("Graph is running....")
 
 
     const [newdata, setNewData] = useState({
-        labels: rawData.map(day => {
-            let date = new Date(day.dt * 1000)
-            return date.toDateString()
-        }),
+        labels: rawData.map(day => day.dt_txt),
         datasets: [{
             label: 'Temperature',
             data: rawData.map(day => day.main.temp),
@@ -28,7 +26,7 @@ const GraphComponent = ({ rawData }) => {
     }
 
     return (
-        <div style={{ width: "800px", height: "800px" }}>
+        <div style={{ width: "800px" }}>
             <Line data={newdata} options={options} />
         </div>
     )
