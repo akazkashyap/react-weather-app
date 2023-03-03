@@ -3,19 +3,29 @@ import { Context } from '../Screen/HomeScreen'
 import style from "../StyleSheets/StyleSearch.module.css"
 
 const SearchComponent = () => {
-    const { state } = useContext(Context)
-    console.log(state)
+    const { getCurrentWeather, getGraphData } = useContext(Context)
+
+    const fetchNewData = (city) => {
+        getCurrentWeather(city)
+        getGraphData(city)
+    }
+    //() => fetchNewData({ q: city })
+    //e => setCity(e.target.value)}
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        fetchNewData({ q: e.target.city.value })
+    }
     return (
-        <div>
-            <div className={style.city_input}>
+        <div className={style.city_input}>
+            <form onSubmit={handleSubmit}>
                 <label>Your City</label>
                 <input type={"text"}
-                    value={city}
-                    onChange={e => setCity(e.target.value)} />
-                <button onClick={() => seach({ q: city })}>Seach</button>
-            </div>
+                    name={"city"} />
+                <button type={"submit"}>Seach</button>
+            </form>
         </div>
     )
 }
 
-export default SearchComponent
+export default React.memo(SearchComponent)

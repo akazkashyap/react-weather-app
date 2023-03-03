@@ -1,0 +1,10 @@
+.graph {
+    width: 400px;
+}
+
+@media(min-width:50rem) {
+    .graph {
+        width: 800px;
+    }
+
+}

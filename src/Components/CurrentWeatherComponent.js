@@ -1,69 +1,49 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import { Context } from '../Screen/HomeScreen'
 import weatherApi from '../api/weatherApi'
 import style from "../StyleSheets/StyleCurrentWeather.module.css"
+import SearchComponent from './SearchComponent'
 
 
-const CurrentWeatherComponent = ({ lat, lon }) => {
-    const [city, setCity] = useState("")
-    const [data, setData] = useState([])
-    const [loading, setLoading] = useState(true)
+const CurrentWeatherComponent = ({ children }) => {
+
+    const { state: { coords, currentTempData }, getCurrentWeather } = useContext(Context)
     const now = new Date()
 
     console.log("Current is running....")
 
-
-    const seach = async (params) => {
-        try {
-            if (params) {
-                const response = await weatherApi.get("/weather", {
-                    params
-                })
-                setData(response.data)
-                setLoading(false)
-            }
-        } catch (error) {
-
-        }
-
-    }
-
-    useEffect(() => {
-        seach({ lat, lon })
-    }, [])
+    useEffect(
+        () => {
+            if (!coords) return;
+            getCurrentWeather(coords)
+        }, [coords])
 
     return (
         <div className={style.body}>
-            <div className={style.city_input}>
-                <label>Your City</label>
-                <input type={"text"}
-                    value={city}
-                    onChange={e => setCity(e.target.value)} />
-                <button onClick={() => seach({ q: city })}>Seach</button>
-            </div>
-
+            {children}
             {
-                loading ?
+                !currentTempData ?
                     "loading" :
                     <div className={style.main}>
                         <p className={style.fade_color}>{`${now.toDateString()}`}</p>
                         <div className={style.main_temp}>
-                            <img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} />
-                            <p>{data.main.temp}
+                            <img src={`https://openweathermap.org/img/wn/${currentTempData.weather[0].icon}@2x.png`} />
+                            <p>{currentTempData.main.temp}
                                 <span className={style.unit}>&deg;C</span>
                             </p>
                         </div>
 
                         <div className={style.description}>
-                            <p className={style.main_description}>{data.weather[0].main}</p>
+                            <p className={style.main_description}>{currentTempData.weather[0].main}</p>
 
                             <div className={style.horiozontal_direction}>
                                 <div>
                                     <p className={style.fade_color}>Humidity</p>
-                                    <p className={style.bold_font}>{data.main.humidity}</p>
+                                    <p className={style.bold_font}>{currentTempData.main.humidity}%</p>
                                 </div>
                                 <div>
                                     <p className={style.fade_color}>Wind Speed</p>
-                                    <p className={style.bold_font}>{data.wind.speed} m/s</p>
+                                    <p className={style.bold_font}>{currentTempData.wind.speed} m/s</p>
                                 </div>
 
                             </div>
@@ -74,4 +54,4 @@ const CurrentWeatherComponent = ({ lat, lon }) => {
     )
 }
 
-export default CurrentWeatherComponent
+export default React.memo(CurrentWeatherComponent)

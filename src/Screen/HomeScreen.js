@@ -5,6 +5,7 @@ import GraphComponent from '../Components/GraphComponent'
 import useLocation from '../hooks/useLocation'
 import style from "../StyleSheets/StyleHome.module.css"
 import WeatherCard from "../Components/WeatherCard"
+import SearchComponent from '../Components/SearchComponent'
 
 export const Context = React.createContext()
 const Provider = Context.Provider
@@ -12,57 +13,76 @@ const Provider = Context.Provider
 
 const initialState = {
     city: "",
-    grapData: "",
-    currentTempData: ""
+    graphData: null,
+    currentTempData: null,
+    coords: null
 }
 
-const reducer = (action, state) => {
+const reducer = (state, action) => {
     switch (action.type) {
+        case "save_coords":
+            return { ...state, coords: action.payload }
+
+        case "save_current_temp":
+            return { ...state, currentTempData: action.payload }
+
+        case "save_graph_data":
+            return { ...state, graphData: action.payload }
+
+        case "save_city_name":
+            return { ...state, city: action.payload }
+
+
         default:
             return state
     }
 }
 
 const HomeScreen = () => {
-    const [data, setData] = useState("")
-    const [loading, setLoading] = useState(true)
-    const [lat, lon] = useLocation()
-    // const units = unitType?"imperial": "metric"
-
     const [state, dispatch] = useReducer(reducer, initialState)
 
+    const getCurrentWeather = async (params) => {
+        //Prams can me {lat, lon} or city name {q}
+        const response = await weatherApi.get("/weather", { params })
+        dispatch({ type: "save_current_temp", payload: response.data })
+    }
+    const getGraphData = async (params) => {
+        //Prams can me {lat, lon} or city name {q}
+        const response = await weatherApi.get("/forecast", { params })
+        dispatch({ type: "save_graph_data", payload: response.data.list })
+    }
+    const setCity = (name) => {
+        dispatch({ type: "save_city_name", payload: name })
+
+    }
+    const setCoords = (coords) => {
+        dispatch({ type: "save_coords", payload: coords })
+    }
+
+
+    const [lat, lon] = useLocation()
     useEffect(() => {
-        weatherApi
-            .get("/forecast",
-                {
-                    params: {
-                        lat, lon
-                    }
-                })
-            .then(res => {
-                setData(res.data)
-                setLoading(false)
-            })
-            .catch(e => { console.log(e.data) })
+        setCoords({ lat, lon })
     }, [])
 
     return (
-        <Provider value={{ state, dispatch }}>
+        <Provider value={{ state, getCurrentWeather, getGraphData, setCity }}>
+            <div>
+                <h1>Weather Forecast</h1>
+            </div>
             <div >
                 <div className={style.main}>
-                    <CurrentWeatherComponent lat={lat} lon={lon} />
+                    <CurrentWeatherComponent>
+                        <SearchComponent />
+                    </CurrentWeatherComponent>
 
                     <div className={style.graph}>
-                        {loading ?
-                            "loading" :
-                            <GraphComponent rawData={data.list} />
-                        }
+                        <GraphComponent />
                     </div>
                 </div>
+
                 <div className={style.cards}>
-                    {!loading &&
-                        <WeatherCard list={data.list} />
-                    }
+                    <WeatherCard />
                 </div>
             </div>
         </Provider>

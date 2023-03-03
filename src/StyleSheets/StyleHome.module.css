@@ -2,9 +2,7 @@
     padding: 10px;
 }
 
-.main {
-    display: flex;
-}
+.main {}
 
 .current_weather {}
 
@@ -14,4 +12,10 @@
 
 .cards {
     margin: 20px;
+}
+
+@media(min-width:50rem) {
+    .main {
+        display: flex;
+    }
 }
