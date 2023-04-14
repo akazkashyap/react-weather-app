@@ -1,5 +1,5 @@
 import axios from "axios"
-const ENDPOINT = "http://api.openweathermap.org/data/2.5"
+const ENDPOINT = "https://api.openweathermap.org/data/2.5"
 
 
 // const units = unitType?"imperial": "metric"
@@ -7,7 +7,7 @@ const ENDPOINT = "http://api.openweathermap.org/data/2.5"
 export default axios.create({
     baseURL: ENDPOINT,
     params: {
-        appid: "e290e16615cfdc8971de26f806de323f",
+        appid: REACT_APP_KEY,
         units: "metric"
     }
 })
