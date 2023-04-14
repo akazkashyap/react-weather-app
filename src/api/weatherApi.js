@@ -7,7 +7,7 @@ const ENDPOINT = "https://api.openweathermap.org/data/2.5"
 export default axios.create({
     baseURL: ENDPOINT,
     params: {
-        appid: REACT_APP_KEY,
+        appid: process.env.REACT_APP_KEY,
         units: "metric"
     }
 })
